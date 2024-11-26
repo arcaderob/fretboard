@@ -7,21 +7,20 @@ import { notes } from "./notes";
 export const Fretboard = () => {
   const [currentNote, setCurrentNote] = useState(null);
 
-  const getRandomNumber = () => Math.floor(Math.random() * 72 + 1);
+  const getRandomNumber = () => Math.floor(Math.random() * 72);
+  const getNote = () => dotPositions[getRandomNumber()];
 
   useEffect(() => {
-    console.log("called");
-    const note = dotPositions[getRandomNumber()];
-    setCurrentNote(note);
+    setCurrentNote(dotPositions[getRandomNumber()]);
   }, []);
 
   const calculatePosition = (stringNumber, fretNumber) => {
     // Adjust these values based on your fretboard image
-    const stringOffset = 15; // Vertical offset between strings in percentages
-    const fretOffset = 10; // Horizontal offset between frets in percentages
+    const stringOffset = 17; // Vertical offset between strings in percentages
+    const fretOffset = 8.25; // Horizontal offset between frets in percentages
 
-    const top = `${5 + (stringNumber - 1) * stringOffset}%`; // Adjust vertical positioning
-    const left = `${10 + (fretNumber - 1) * fretOffset}%`; // Adjust horizontal positioning
+    const top = `${2 + (stringNumber - 1) * stringOffset}%`; // Adjust vertical positioning
+    const left = `${5 + (fretNumber - 1) * fretOffset}%`; // Adjust horizontal positioning
 
     return { top, left };
   };
@@ -29,10 +28,7 @@ export const Fretboard = () => {
   const handleDotClick = (note) => {
     if (note !== currentNote.note) return;
 
-    alert(`You clicked on note ${note}!`);
-    const x = getRandomNumber();
-    console.log(x);
-    setCurrentNote(dotPositions[x]);
+    setCurrentNote(getNote());
   };
 
   if (!currentNote) return null;
@@ -55,7 +51,6 @@ export const Fretboard = () => {
           cursor: "pointer",
           transform: "translate(-50%, -50%)", // Center the dot
         }}
-        onClick={() => handleDotClick(currentNote.note)}
       ></div>
       <div>
         {notes.map((note) => (

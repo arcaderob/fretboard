@@ -6,6 +6,7 @@ import { notes } from "./notes";
 
 export const Fretboard = () => {
   const [currentNote, setCurrentNote] = useState(null);
+  const [answerText, setAnswerText] = useState(null);
 
   const getRandomNumber = () => Math.floor(Math.random() * 72);
   const getNote = () => dotPositions[getRandomNumber()];
@@ -16,7 +17,7 @@ export const Fretboard = () => {
 
   const calculatePosition = (stringNumber, fretNumber) => {
     // Adjust these values based on your fretboard image
-    const stringOffset = 17; // Vertical offset between strings in percentages
+    const stringOffset = 19; // Vertical offset between strings in percentages
     const fretOffset = 8.25; // Horizontal offset between frets in percentages
 
     const top = `${2 + (stringNumber - 1) * stringOffset}%`; // Adjust vertical positioning
@@ -25,9 +26,19 @@ export const Fretboard = () => {
     return { top, left };
   };
 
-  const handleDotClick = (note) => {
-    if (note !== currentNote.note) return;
+  const setResponseText = (text) => {
+    setAnswerText(text);
 
+    setTimeout(() => setAnswerText(null), 1000);
+  };
+
+  const handleDotClick = (note) => {
+    if (note !== currentNote.note) {
+      setResponseText("Try again!");
+      return;
+    }
+
+    setResponseText("Correct!");
     setCurrentNote(getNote());
   };
 
@@ -36,8 +47,12 @@ export const Fretboard = () => {
   const position = calculatePosition(currentNote.string, currentNote.fret);
 
   return (
-    <div style={{ position: "relative", display: "inline-block" }}>
-      <img src={fretboardImage} alt="Fretboard" style={{ display: "block" }} />
+    <div style={{ position: "relative", width: "1180px", height: "300px" }}>
+      <img
+        src={fretboardImage}
+        alt="Fretboard"
+        style={{ width: "100%", height: "100%" }}
+      />
       <div
         key={`${currentNote.string}-${currentNote.fret}`}
         style={{
@@ -56,6 +71,13 @@ export const Fretboard = () => {
         {notes.map((note) => (
           <NoteButton note={note} handleClick={handleDotClick} />
         ))}
+        <div
+          style={{
+            paddingTop: "20px",
+          }}
+        >
+          {answerText}
+        </div>
       </div>
     </div>
   );

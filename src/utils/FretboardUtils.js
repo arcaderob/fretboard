@@ -1,4 +1,47 @@
-export const dotPositions = [
+export const getRandomNumber = (max) => Math.floor(Math.random() * max);
+
+export const calculatePosition = (stringNumber, fretNumber) => {
+  const stringOffset = 19; // Vertical offset between strings in percentages
+  const fretOffset = 8.25; // Horizontal offset between frets in percentages
+
+  const top = `${2 + (stringNumber - 1) * stringOffset}%`;
+  const left = `${5 + (fretNumber - 1) * fretOffset}%`;
+
+  return { top, left };
+};
+
+export const getNotes = () => {
+  return [
+    "A",
+    "A#/Bb",
+    "B",
+    "C",
+    "C#/Db",
+    "D",
+    "D#/Eb",
+    "E",
+    "F",
+    "F#/Gb",
+    "G",
+  ];
+};
+
+export const Notes = [
+  "A",
+  "A#/Bb",
+  "B",
+  "C",
+  "C#/Db",
+  "D",
+  "D#/Eb",
+  "E",
+  "F",
+  "F#/Gb",
+  "G",
+  "G#/Ab",
+];
+
+export const DotPositions = [
   // String 1 (High E string)
   { string: 1, fret: 1, note: "F" },
   { string: 1, fret: 2, note: "F#/Gb" },

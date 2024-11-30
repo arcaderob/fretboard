@@ -1,34 +1,25 @@
 import { useEffect, useState } from "react";
-import fretboardImage from "./fretboard.png";
 import { NoteButton } from "./NoteButton";
-import { dotPositions } from "./dotPositions";
-import { notes } from "./notes";
+import { Dot } from "./Dot";
+import { FretboardImage } from "./FretboardImage";
+import { AnswerText } from "./AnswerText";
+import {
+  DotPositions,
+  Notes,
+  calculatePosition,
+  getRandomNumber,
+} from "../utils/FretboardUtils";
 
 export const Fretboard = () => {
   const [currentNote, setCurrentNote] = useState(null);
   const [answerText, setAnswerText] = useState(null);
 
-  const getRandomNumber = () => Math.floor(Math.random() * 72);
-  const getNote = () => dotPositions[getRandomNumber()];
-
   useEffect(() => {
-    setCurrentNote(dotPositions[getRandomNumber()]);
+    setCurrentNote(DotPositions[getRandomNumber(DotPositions.length)]);
   }, []);
-
-  const calculatePosition = (stringNumber, fretNumber) => {
-    // Adjust these values based on your fretboard image
-    const stringOffset = 19; // Vertical offset between strings in percentages
-    const fretOffset = 8.25; // Horizontal offset between frets in percentages
-
-    const top = `${2 + (stringNumber - 1) * stringOffset}%`; // Adjust vertical positioning
-    const left = `${5 + (fretNumber - 1) * fretOffset}%`; // Adjust horizontal positioning
-
-    return { top, left };
-  };
 
   const setResponseText = (text) => {
     setAnswerText(text);
-
     setTimeout(() => setAnswerText(null), 1000);
   };
 
@@ -37,9 +28,8 @@ export const Fretboard = () => {
       setResponseText("Try again!");
       return;
     }
-
     setResponseText("Correct!");
-    setCurrentNote(getNote());
+    setCurrentNote(DotPositions[getRandomNumber(DotPositions.length)]);
   };
 
   if (!currentNote) return null;
@@ -48,36 +38,13 @@ export const Fretboard = () => {
 
   return (
     <div style={{ position: "relative", width: "1180px", height: "300px" }}>
-      <img
-        src={fretboardImage}
-        alt="Fretboard"
-        style={{ width: "100%", height: "100%" }}
-      />
-      <div
-        key={`${currentNote.string}-${currentNote.fret}`}
-        style={{
-          position: "absolute",
-          top: position.top,
-          left: position.left,
-          width: "20px",
-          height: "20px",
-          borderRadius: "50%",
-          backgroundColor: "red",
-          cursor: "pointer",
-          transform: "translate(-50%, -50%)", // Center the dot
-        }}
-      ></div>
+      <FretboardImage />
+      <Dot position={position} />
       <div>
-        {notes.map((note) => (
-          <NoteButton note={note} handleClick={handleDotClick} />
+        {Notes.map((note) => (
+          <NoteButton key={note} note={note} handleClick={handleDotClick} />
         ))}
-        <div
-          style={{
-            paddingTop: "20px",
-          }}
-        >
-          {answerText}
-        </div>
+        <AnswerText text={answerText} />
       </div>
     </div>
   );
